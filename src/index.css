@@ -1,0 +1,11 @@
+/* Основные стили компонентов PrimeReact */
+@import "primereact/resources/primereact.min.css";
+
+/* Тема PrimeReact (например, "lara-light-indigo") */
+@import "primereact/resources/themes/lara-light-indigo/theme.css";
+
+/* Иконки PrimeReact */
+@import "primeicons/primeicons.css";
+
+/* PrimeFlex (по желанию, для настройки сетки или утилитарных классов) */
+@import "primeflex/primeflex.min.css";
