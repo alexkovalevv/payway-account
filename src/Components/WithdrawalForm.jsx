@@ -1,15 +1,22 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {InputNumber} from 'primereact/inputnumber';
 import {InputText} from 'primereact/inputtext';
 import {Button} from 'primereact/button';
 import {InputTextarea} from 'primereact/inputtextarea';
-
+import {Toast} from 'primereact/toast';
+import axios from 'axios';
+import {useNavigate} from 'react-router-dom';
+import {useDispatch} from 'react-redux'; // Импортируем useDispatch
+import {showToast} from '../ToastSlice'; // Импортируем action
 
 const WithdrawalForm = () => {
     const [amount, setAmount] = useState(0);
     const [details, setDetails] = useState('');
     const [comments, setComments] = useState('');
     const [paymentType, setPaymentType] = useState('swift');
+    const toast = useRef(null);
+    const navigate = useNavigate();
+    const dispatch = useDispatch(); // Хук для отправки actions
 
     const paymentOptions = [
         {
@@ -32,116 +39,175 @@ const WithdrawalForm = () => {
         },
     ];
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Обработка отправки формы
+
+        // Данные для отправки на сервер
+        const formData = {
+            amount,
+            details,
+            comments,
+            paymentType,
+        };
+
+        try {
+            // Отправляем POST-запрос на WordPress REST API
+            const response = await axios.post('/wp-json/your-custom-endpoint/v1/withdrawal', formData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`, // Если требуется авторизация
+                },
+            });
+
+            // Очистка формы после успешной отправки
+            setAmount(0);
+            setDetails('');
+            setComments('');
+            setPaymentType('swift');
+
+            // Отправляем действие (action) для показа сообщения
+            dispatch(showToast({
+                message: 'Заявка на вывод средств успешно создана!',
+                severity: 'success',
+            }));
+
+            // Перенаправляем на главную страницу
+            navigate('/');
+        } catch (error) {
+            // Обработка ошибок
+            console.error('Ошибка при отправке формы:', error);
+
+            if (error.response) {
+                // Ошибка от сервера
+                toast.current.show({
+                    severity: 'error',
+                    summary: 'Ошибка',
+                    detail: error.response.data.message || 'Произошла ошибка при отправке формы.',
+                    life: 3000,
+                });
+            } else {
+                // Ошибка сети или другая ошибка
+                toast.current.show({
+                    severity: 'error',
+                    summary: 'Ошибка',
+                    detail: 'Сервер недоступен. Попробуйте позже.',
+                    life: 3000,
+                });
+            }
+        }
     };
 
     return (
-        <form onSubmit={handleSubmit} className="payway-draw">
-            <div className="pt-6 w-full">
-                <div className="grid formgrid p-fluid mb-4">
-                    <div className="col-12 md:col-6">
-                        <div className="flex flex-column gap-3">
-                            <label htmlFor="amount" className="block">
-                                Сумма к выводу
-                            </label>
-                            <InputNumber
-                                id="amount"
-                                className="w-full"
-                                value={amount}
-                                onValueChange={(e) => setAmount(e.value)}
-                                required
-                            />
-                        </div>
-                        <div className="flex flex-column gap-3 mt-4">
-                            <label htmlFor="details" className="block">
-                                Реквизиты
-                            </label>
-                            <InputText
-                                id="details"
-                                className="w-full"
-                                type="text"
-                                value={details}
-                                onChange={(e) => setDetails(e.target.value)}
-                                required
-                            />
-                        </div>
-                    </div>
-                    <div className="col-12 md:col-6">
-                        <div className="flex flex-column gap-3 h-full">
-                            <label htmlFor="comments" className="block">
-                                Примечание (Необязательно)
-                            </label>
-                            <InputTextarea
-                                id="comments"
-                                className="w-full flex-grow-1 h-full"
-                                placeholder="Оставьте комментарий"
-                                value={comments}
-                                onChange={(e) => setComments(e.target.value)}
-                                autoResize={false}
-                            />
-                        </div>
-                    </div>
-                </div>
+        <div>
+            <Toast ref={toast}/>
 
-                <div>
-                    <div className="text-900 text-xl mb-3 text-left font-medium">
-                        Выберите способ оплаты
+            <form onSubmit={handleSubmit} className="payway-draw">
+                <div className="pt-6 w-full">
+                    <div className="grid formgrid p-fluid mb-4">
+                        <div className="col-12 md:col-6">
+                            <div className="flex flex-column gap-3">
+                                <label htmlFor="amount" className="block">
+                                    Сумма к выводу
+                                </label>
+                                <InputNumber
+                                    id="amount"
+                                    className="w-full"
+                                    value={amount}
+                                    onValueChange={(e) => setAmount(e.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="flex flex-column gap-3 mt-4">
+                                <label htmlFor="details" className="block">
+                                    Реквизиты
+                                </label>
+                                <InputText
+                                    id="details"
+                                    className="w-full"
+                                    type="text"
+                                    value={details}
+                                    onChange={(e) => setDetails(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div className="col-12 md:col-6">
+                            <div className="flex flex-column gap-3 h-full">
+                                <label htmlFor="comments" className="block">
+                                    Примечание (Необязательно)
+                                </label>
+                                <InputTextarea
+                                    id="comments"
+                                    className="w-full flex-grow-1 h-full"
+                                    placeholder="Оставьте комментарий"
+                                    value={comments}
+                                    onChange={(e) => setComments(e.target.value)}
+                                    autoResize={false}
+                                />
+                            </div>
+                        </div>
                     </div>
 
-                    {paymentOptions.map((option) => (
-                        <div
-                            key={option.value}
-                            className={`surface-card mb-2 border-2 p-3 flex flex-column align-items-start cursor-pointer ${
-                                paymentType === option.value ? 'border-primary' : 'surface-border'
-                            }`}
-                            onClick={() => setPaymentType(option.value)}
-                        >
-                            <div className="flex align-items-center w-full">
-                                <div
-                                    className={`p-radiobutton p-component mr-3 ${
-                                        paymentType === option.value ? 'p-radiobutton-checked' : ''
-                                    }`}
-                                >
-                                    <div className="p-hidden-accessible">
-                                        <input
-                                            type="radio"
-                                            name="payment_type"
-                                            value={option.value}
-                                            checked={paymentType === option.value}
-                                            readOnly
-                                        />
-                                    </div>
+                    <div>
+                        <div className="text-900 text-xl mb-3 text-left font-medium">
+                            Выберите способ оплаты
+                        </div>
+
+                        {paymentOptions.map((option) => (
+                            <div
+                                key={option.value}
+                                className={`surface-card mb-2 border-2 p-3 flex flex-column align-items-start cursor-pointer ${
+                                    paymentType === option.value ? 'border-primary' : 'surface-border'
+                                }`}
+                                onClick={() => setPaymentType(option.value)}
+                            >
+                                <div className="flex align-items-center w-full">
                                     <div
-                                        className={`p-radiobutton-box ${
-                                            paymentType === option.value ? 'p-highlight' : ''
+                                        className={`p-radiobutton p-component mr-3 ${
+                                            paymentType === option.value ? 'p-radiobutton-checked' : ''
                                         }`}
                                     >
-                                        <div className="p-radiobutton-icon"></div>
+                                        <div className="p-hidden-accessible">
+                                            <input
+                                                type="radio"
+                                                name="payment_type"
+                                                value={option.value}
+                                                checked={paymentType === option.value}
+                                                readOnly
+                                            />
+                                        </div>
+                                        <div
+                                            className={`p-radiobutton-box ${
+                                                paymentType === option.value ? 'p-highlight' : ''
+                                            }`}
+                                        >
+                                            <div className="p-radiobutton-icon"></div>
+                                        </div>
+                                    </div>
+                                    <div className="flex-1">
+                                        <div className="font-medium">{option.label}</div>
+                                    </div>
+                                    <div className="ml-auto flex flex-nowrap">
+                                        <i className={`${option.iconClass} text-xl`}/>
                                     </div>
                                 </div>
-                                <div className="flex-1">
-                                    <div className="font-medium">{option.label}</div>
-                                </div>
-                                <div className="ml-auto flex flex-nowrap">
-                                    <i className={`${option.iconClass} text-xl`}/>
-                                </div>
+                                {paymentType === option.value && (
+                                    <div className="mt-3 text-sm text-400 fadein animation-duration-300">
+                                        {option.description}
+                                    </div>
+                                )}
                             </div>
-                            {paymentType === option.value && (
-                                <div className="mt-3 text-sm text-400 fadein animation-duration-300">
-                                    {option.description}
-                                </div>
-                            )}
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
-            </div>
 
-            <Button type="submit" label="Создать заявку"
+                <Button
+                    type="submit"
+                    label="Создать заявку"
                     className="mt-3 bg-blue-500 hover:bg-blue-600 border-blue-600 hover:border-blue-700"
-            />
-        </form>
+                />
+            </form>
+        </div>
     );
 };
 

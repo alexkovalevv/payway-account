@@ -9,7 +9,8 @@ export default defineConfig({
             '/wp-json': {
                 target: 'http://localhost:8000',
                 changeOrigin: true,
-                secure: false
+                secure: false,
+                rewrite: (path) => path.replace(/^\/wp-json/, '/wp-json')
             }
         }
     }
