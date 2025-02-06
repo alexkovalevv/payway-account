@@ -28,7 +28,7 @@ export default function Withdrawal() {
     }, [message, severity, dispatch]);
 
     return (
-        <>
+        <div className="p-5">
             <Toast ref={toast}/>
 
             <div className="text-3xl text-900 font-semibold text-lg mt-3">
@@ -42,6 +42,6 @@ export default function Withdrawal() {
             </div>
 
             <GeneralDataTable/>
-        </>
+        </div>
     );
 }

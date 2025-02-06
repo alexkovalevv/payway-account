@@ -8,7 +8,6 @@ export default function Menu() {
         {path: "/", icon: "pi pi-wallet", label: "Вывод средств"},
         {path: "/unlock", icon: "pi pi-unlock", label: "Разблокировка средств"},
         {path: "/project", icon: "pi pi-folder-open", label: "Мои проекты"},
-        {path: "/profile", icon: "pi pi-id-card", label: "Профиль"},
     ];
 
     return (

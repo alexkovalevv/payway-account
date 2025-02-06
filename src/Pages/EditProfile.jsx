@@ -41,7 +41,7 @@ export default function EditProfile() {
     };
 
     return (
-        <div>
+        <div className="p-3">
             {successMessage && (
                 <Message
                     severity="success"

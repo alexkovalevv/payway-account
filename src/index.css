@@ -9,3 +9,7 @@
 
 /* PrimeFlex (по желанию, для настройки сетки или утилитарных классов) */
 @import "primeflex/primeflex.min.css";
+
+body {
+    margin: 0;
+}

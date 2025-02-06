@@ -8,7 +8,7 @@ export default function CreateWithdrawal() {
         {'id': 'create-withdrawal', 'label': 'Создание заявки на вывод средств', 'url': '/create-withdrawal'}
     ];
     return (
-        <>
+        <div className="p-5">
             <div className="text-3xl text-900 font-semibold text-lg mt-3">
                 Заявка на вывод средств
             </div>
@@ -17,6 +17,6 @@ export default function CreateWithdrawal() {
             </div>
             <BreadCrumb model={items}/>
             <WithdrawalForm/>
-        </>
+        </div>
     );
 }
