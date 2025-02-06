@@ -45,14 +45,14 @@ const WithdrawalForm = () => {
         // Данные для отправки на сервер
         const formData = {
             amount,
-            details,
+            payment_details: details,
             comments,
-            paymentType,
+            payment_type: paymentType,
         };
 
         try {
             // Отправляем POST-запрос на WordPress REST API
-            const response = await axios.post('/wp-json/your-custom-endpoint/v1/withdrawal', formData, {
+            const response = await axios.post('/wp-json/payway/v1/withdrawal', formData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`, // Если требуется авторизация
