@@ -2,8 +2,8 @@ import React, {useRef, useEffect} from "react";
 import {Toast} from 'primereact/toast';
 import {useSelector, useDispatch} from 'react-redux';
 import {clearToast} from '../ToastSlice';
-import GeneralDataTable from "../Components/GeneralDataTable";
-import CreateWithdrawalButton from "../Components/CreateWithdrawalButton";
+import WithdrawalTable from "../Components/WithdrawalTable";
+import CreateButton from "../Components/CreateButton";
 
 export default function Withdrawal() {
     const toast = useRef(null);
@@ -38,10 +38,13 @@ export default function Withdrawal() {
                 <div className="p-divider-content"></div>
             </div>
             <div className="mb-3">
-                <CreateWithdrawalButton/>
+                <CreateButton
+                    label="Создать заявку"
+                    to="/create-withdrawal" // Адрес страницы создания заявки
+                />
             </div>
 
-            <GeneralDataTable/>
+            <WithdrawalTable/>
         </div>
     );
 }

@@ -7,7 +7,8 @@ export default function Menu() {
     const menuItems = [
         {path: "/", icon: "pi pi-wallet", label: "Вывод средств"},
         {path: "/unlock", icon: "pi pi-unlock", label: "Разблокировка средств"},
-        {path: "/project", icon: "pi pi-folder-open", label: "Мои проекты"},
+        {path: "/projects", icon: "pi pi-folder-open", label: "Мои проекты"},
+        {path: "/stats", icon: "pi pi-folder-open", label: "Статистика"},
     ];
 
     return (

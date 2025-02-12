@@ -1,8 +1,10 @@
 import {configureStore} from '@reduxjs/toolkit';
-import toastReducer from './toastSlice'; // Создадим этот файл позже
+import toastReducer from './toastSlice';
+import dataSlice from "./DataSlice.jsx";
 
 export const Store = configureStore({
     reducer: {
-        toast: toastReducer, // Регистрируем reducer для управления сообщениями
+        toast: toastReducer,
+        data: dataSlice
     },
 });
