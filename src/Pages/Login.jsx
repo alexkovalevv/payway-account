@@ -88,7 +88,7 @@ const AuthForm = () => {
 
     useEffect(() => {
         if (isAuthenticated) {
-            navigate('/');
+            navigate('/account');
         }
     }, [isAuthenticated, navigate]);
 
@@ -136,7 +136,7 @@ const AuthForm = () => {
                     detail: 'Вы успешно авторизовались!',
                     life: 3000,
                 });
-                navigate('/');
+                navigate('/account');
             }
         } catch (err) {
             handleError(err);

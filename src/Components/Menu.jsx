@@ -5,10 +5,10 @@ export default function Menu() {
     const location = useLocation(); // Хук для получения текущего пути
 
     const menuItems = [
-        {path: "/", icon: "pi pi-wallet", label: "Вывод средств"},
+        {path: "/account", icon: "pi pi-wallet", label: "Вывод средств"},
         {path: "/unlock", icon: "pi pi-unlock", label: "Разблокировка средств"},
         {path: "/projects", icon: "pi pi-folder-open", label: "Мои проекты"},
-        {path: "/stats", icon: "pi pi-folder-open", label: "Статистика"},
+        {path: "/stats", icon: "pi pi-chart-bar", label: "Статистика"},
     ];
 
     return (

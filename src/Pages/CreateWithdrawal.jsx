@@ -4,7 +4,7 @@ import {BreadCrumb} from "primereact/breadcrumb";
 
 export default function CreateWithdrawal() {
     const items = [
-        {'id': 'withdrawal', 'label': 'Вывод средств', 'url': '/'},
+        {'id': 'withdrawal', 'label': 'Вывод средств', 'url': '/account'},
         {'id': 'create-withdrawal', 'label': 'Создание заявки на вывод средств', 'url': '/create-withdrawal'}
     ];
     return (

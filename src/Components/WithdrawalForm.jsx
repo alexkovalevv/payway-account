@@ -72,7 +72,7 @@ const WithdrawalForm = () => {
             }));
 
             // Перенаправляем на главную страницу
-            navigate('/');
+            navigate('/account');
         } catch (error) {
             // Обработка ошибок
             console.error('Ошибка при отправке формы:', error);
